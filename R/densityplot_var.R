@@ -1,3 +1,25 @@
+#' densityplot_var
+#'
+#'Esta función genera una gráfica de densidad para cada variable en el conjunto de datos de pingüinos,
+#'con la opción de generar gráficas para variables individuales o para todas las variables.
+#' @param df Recibe de variable el  conjunto de datos de la data(package='palmerpenguins')
+#' @param var_index Recibe una numeración para cada variable, definida en la funcion
+#'                    1 = "bill_length_mm"
+#'                    2 = "bill_depth_mm"
+#'                    3 = "flipper_length_mm"
+#'                    4 = "body_mass_g"
+#'                "all" = Una grafica conjunta con las anteriores variables
+#'
+#'
+#' @return un grafico de densidad
+#' @export
+#'
+#' @examples
+#' data(package='palmerpenguins')
+#' df <- penguins
+#' densityplot_var(df, 1)
+#' densityplot_var(df, "all")
+#'
 densityplot_var <- function(df, var_index) {
   var_list <- c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g")
   if (!all(var_list %in% colnames(df))) {

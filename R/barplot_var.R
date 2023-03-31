@@ -1,3 +1,22 @@
+#' barplot_var
+#'
+#' Esta función genera un diagrama de barras de la frecuencia de especies, islas y sexo de pingüinos.
+#' Toma un marco de datos como argumento y devuelve un gráfico de barras.
+#'
+#' @param df Recibe de variable el  conjunto de datos de la data(package='palmerpenguins')
+#' @param var_index Recibe una numeración para cada variable, definida en la funcion
+#'                    1 = "species"
+#'                    2 = "island"
+#'                    3 = "sex"
+#'                    "all" = Una grafica conjunta con las anteriores variables
+#' @return un grafico diagrama de barras de cada una de las variables de la data.
+#' @export
+#'
+#' @examples
+#' data(package='palmerpenguins')
+#' df <- penguins
+#' barplot_var(df, 1)
+#' barplot_var(df, "all")
 barplot_var <- function(df, var_index) {
   var_list <- c("species", "island", "sex")
   fill_list <- list(
