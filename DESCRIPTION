@@ -1,12 +1,16 @@
 Package: penguinViz
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Title: Visualize Penguin Data with Ease
+Version: 0.1.0
+Authors@R: person("Arnoldd", "Hernández", , "rodrigohurtado@outlook.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1825-0097"))
+Description: The penguinViz package provides a set of easy-to-use functions for visualizing data about penguins. With penguinViz, you can quickly generate bar plots, pie charts, box plots, scatter plots, density plots, and correlation plots to explore and understand your penguin data.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Imports:
+    gridExtra,
+    magrittr,
+    dplyr,
+    corrplot,
+    ggplot2,
+    palmerpenguins
