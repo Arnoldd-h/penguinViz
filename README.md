@@ -20,19 +20,21 @@ Once the package is loaded, you can use its functions to generate different type
 
 * [```barplot_var:```](https://github.com/Arnoldd-h/penguinViz/blob/main/R/barplot_var.R) This function generates a bar plot of the frequency of a specified variable in the input data frame.
 * [```piechart_var:```](https://github.com/Arnoldd-h/penguinViz/blob/main/R/piechart_var.R) This function generates a pie chart of the relative frequency of a specified variable in the input data frame.
-* ```correlation_table:``` This function generates a correlation table of the numeric variables in the input data frame.
-* ```correlation_plot:``` This function generates a correlation plot of the numeric variables in the input data frame.
-* ```boxplot_jitter_var:``` This function generates a box plot with jittered points of a specified variable in the input data frame.
-* ```densityplot_var:``` This function generates a density plot of a specified variable in the input data frame.
+* [```correlation_table:```](https://github.com/Arnoldd-h/penguinViz/blob/main/R/correlation_table.R) This function generates a correlation table of the numeric variables in the input data frame.
+* [```correlation_plot:```](https://github.com/Arnoldd-h/penguinViz/blob/main/R/correlation_plot.R) This function generates a correlation plot of the numeric variables in the input data frame.
+* [```boxplot_jitter_var:```](https://github.com/Arnoldd-h/penguinViz/blob/main/R/boxplot_jitter_var.R) This function generates a box plot with jittered points of a specified variable in the input data frame.
+* [```densityplot_var:```](https://github.com/Arnoldd-h/penguinViz/blob/main/R/densityplot_var.R) This function generates a density plot of a specified variable in the input data frame.
 
 
 For example, to generate a bar plot of the frequency of penguin species, you can use the barplot_var function:
+
 
  ```r
  barplot_var(df, "species")
  ```
 This will generate a bar plot using the data in your df data frame and the specified variable (species). You can use the other functions in the package in a similar way to generate different types of plots.
 
+For more information on the operation of each of the functions, you can review the document [description_package.rmd](https://github.com/Arnoldd-h/penguinViz/blob/main/description_package.Rmd)
 # License
 The  ```penguinViz ``` package is licensed under the MIT license.
 
