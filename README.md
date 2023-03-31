@@ -15,7 +15,7 @@ To use the penguinViz package, first load it using the library function:
 ```r
 library(penguinViz)
 ```
-
+## [Functions:](https://github.com/Arnoldd-h/penguinViz/tree/main/R)
 Once the package is loaded, you can use its functions to generate different types of plots. The package includes the following functions:
 
 * ```barplot_var:``` This function generates a bar plot of the frequency of a specified variable in the input data frame.
