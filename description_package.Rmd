@@ -1,0 +1,324 @@
+---
+title: '**penguinViz**'
+author: "Arnoldd Hernández"
+date: "`r Sys.Date()`"
+output:
+    prettydoc::html_pretty:
+    theme: hpstr
+    highlight: github
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+El paquete ```penguinViz``` proporciona un conjunto de funciones fáciles de usar para visualizar datos sobre pingüinos. Con ```penguinViz```, puede generar rápidamente gráficos de barras, gráficos circulares, gráficos de caja, gráficos de dispersión, gráficos de densidad y gráficos de correlación para explorar y comprender  datos de la libreria ```palmerpenguins ```.
+
+
+<span style="text-decoration: underline;">La librería `palmerpenguins` en R proporciona un conjunto de datos para la exploración y visualización de datos, como una alternativa al conjunto de datos `iris`. Contiene dos conjuntos de datos: `penguins` y `penguins_raw`. Los datos fueron recopilados por la Dra. Kristen Gorman y la Estación Palmer en la Antártida LTER, miembro de la Red de Investigación Ecológica a Largo Plazo.</span>
+
+<span style="text-decoration: underline;">El conjunto de datos `penguins` es una versión simplificada de los datos brutos y contiene 8 variables para 344 pingüinos. Hay 3 especies diferentes de pingüinos en este conjunto de datos, recolectados en 3 islas del Archipiélago Palmer en la Antártida.</span>
+
+
+El paquete incluye funciones para generar diagramas de barras y gráficos circulares de la frecuencia y la frecuencia relativa de especies, islas y sexos de pingüinos. Estas funciones facilitan la visualización de la distribución de pingüinos en diferentes categorías.
+
+Además de estos gráficos básicos, el paquete también incluye funciones para generar visualizaciones más avanzadas. Por ejemplo, puede utilizar la función ```correlación_plot``` para generar un gráfico de correlación de las variables numéricas en su marco de datos. Esto puede ayudarlo a identificar relaciones entre diferentes variables en sus datos.
+
+El paquete también incluye funciones para generar diagramas de caja y diagramas de dispersión de diferentes variables en sus datos. Estos gráficos pueden ayudarlo a identificar patrones y tendencias en sus datos y comparar la distribución de diferentes variables en diferentes grupos.
+
+
+## Librerias necesarias para el package
+```{r, results='hide', warning=FALSE, message=FALSE}
+library(gridExtra);library(magrittr);library(dplyr)
+library(corrplot);library(ggplot2);library(palmerpenguins)
+```
+
+Entre las funciones implementadas en el package ```penguinViz ``` están: 
+
+* ```barplot_var```
+* ```piechart_var ```
+* ```correlation_table```
+* ```correlation_plot```
+* ```boxplot_jitter_var```
+* ```densityplot_var```
+
+Una vez cargadas las librerias necesarias, se tiene que cargar la data a usar: 
+
+
+```{r, warning=FALSE}
+data(package='palmerpenguins')
+df <- penguins
+```
+
+### ```barplot_var```
+Esta función genera un diagrama de barras de la frecuencia de especies, islas y sexo de pingüinos.
+```{r}
+barplot_var <- function(df, var_index) {
+  var_list <- c("species", "island", "sex")
+  fill_list <- list(
+    species = c("Adelie" = "blue", "Chinstrap" = "red", "Gentoo" = "green"),
+    island = c("Biscoe" = "blue", "Dream" = "red", "Torgersen" = "green"),
+    sex = c("female" = "blue", "male" = "red")
+  )
+  if (!all(var_list %in% colnames(df))) {
+    stop("Input data frame must contain all columns in 'var_list'")
+  }
+  if (var_index == "all") {
+    plot_list <- list()
+    for (var in var_list) {
+      p <- ggplot(df, aes_string(x = var, fill = var)) +
+        geom_bar() +
+        scale_fill_manual(values = fill_list[[var]]) +
+        labs(title = paste('Penguins', var, '& Count')) +
+        theme_grey()
+      plot_list[[var]] <- p
+    }
+    gridExtra::grid.arrange(grobs = plot_list, ncol = 2)
+  } else {
+    var <- var_list[var_index]
+    p <- ggplot(df, aes_string(x = var, fill = var)) +
+      geom_bar() +
+      scale_fill_manual(values = fill_list[[var]]) +
+      labs(title = paste('Penguins', var, '& Count')) +
+      theme_grey()
+    print(p)
+  }
+}
+```
+
+Los dos argumentos de la función son ```df``` y ```var_index```. ```df``` es el marco de datos que se va a utilizar para crear el gráfico de barras. ```var_index``` es un índice que indica qué variable de ```df``` se utilizará para crear el gráfico de barras.
+
+La función comienza definiendo una lista de variables ```var_list```, que contiene tres variables: ```species```, ```island``` y ```sex```. También define una lista de colores para cada categoría de cada variable ```fill_list```. En este caso, cada variable tiene un conjunto de colores predefinidos que se utilizarán para representar las categorías.
+
+A continuación, la función verifica que todas las variables de ```var_list``` estén presentes en las columnas de ```df```.En donde
+
+`:1 = "species"
+2 = "island"
+3 = "sex"
+"all" = Una grafica conjunta`
+
+Por ejemplo, para graficar la variable "species":
+```{r, warning=FALSE}
+barplot_var(df,1)
+```
+
+
+o para generar una grafica conjunta:
+```{r, warning=FALSE}
+barplot_var(df,"all")
+```
+
+
+### ```piechart_var```
+Esta función genera un gráfico circular de la frecuencia relativa de especies, islas y sexos de pingüinos.
+Toma un marco de datos como argumento y devuelve un gráfico circular.
+```{r}
+piechart_var <- function(df, var_index) {
+  var_list <- c("species", "island", "sex")
+  if (!all(var_list %in% colnames(df))) {
+    stop("Input data frame must contain all columns in 'var_list'")
+  }
+  if (var_index == "all") {
+    plot_list <- list()
+    for (var in var_list) {
+      p <- ggplot(df, aes(x = "", fill = !!sym(var))) +
+        geom_bar(width = 1) +
+        coord_polar("y") +
+        theme_grey() +
+        labs(title = paste('Penguins', var))
+      plot_list[[var]] <- p
+    }
+    gridExtra::grid.arrange(grobs = plot_list, ncol = 2)
+  } else {
+    var <- var_list[var_index]
+    p <- ggplot(df, aes(x = "", fill = !!sym(var))) +
+      geom_bar(width = 1) +
+      coord_polar("y") +
+      theme_grey() +
+      labs(title = paste('Penguins', var))
+    print(p)
+  }
+}
+```
+De igual manera que para la función ```barplot_var```
+Los dos argumentos de la función son ```df``` y ```var_index```. ```df``` es el marco de datos que se va a utilizar para crear el gráfico de barras. ```var_index``` es un índice que indica qué variable de ```df``` se utilizará para crear el gráfico de barras.
+
+
+    1 = "species"
+    2 = "island"
+    3 = "sex"
+    "all" = Una grafica conjunta con las anteriores variables
+
+Por ejemplo, para graficar la variable ```species```:
+```{r, warning=FALSE}
+piechart_var(df,1)
+```
+
+
+Para generar una grafica conjunta:
+```{r, warning=FALSE}
+piechart_var(df,"all")
+```
+
+### ```correlation_table```
+
+Esta función  toma un dataframe como argumento y devuelve la matriz de correlación de Spearman de las variables numéricas ```bill_length_mm```, ```bill_depth_mm```, ```flipper_length_mm``` y ```body_mass_g```. 
+
+```{r}
+correlation_table <- function(df) {
+  if (!all(c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g") %in% colnames(df))) {
+    stop("Input data frame must contain 'bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', and 'body_mass_g' columns")
+  }
+  df_num <- df %>%
+    select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) %>%
+    filter(is.na(bill_length_mm) == F)
+  df_num.cor <- cor(df_num, method = c("spearman"))
+  return(df_num.cor)
+}
+```
+
+La función verifica si el dataframe de entrada tiene todas las columnas necesarias utilizando el operador ```%in%``` y la función ```all()```. Si no todas las columnas necesarias están presentes, se emite un mensaje de error utilizando la función stop().
+
+A continuación, se seleccionan solo las columnas numéricas requeridas y se eliminan todas las filas que contienen valores faltantes utilizando la función ```select()``` y ```filter()``` del paquete dplyr. Luego se calcula la matriz de correlación de Spearman utilizando la función cor() con el método “spearman” y se devuelve el resultado.
+
+```{r, warning=FALSE}
+correlation_table(df)
+```
+
+
+### ```correlation_plot ```
+
+Esta función calcula la matriz de correlación de los atributos numéricos en un conjunto de datos y traza un gráfico de correlación utilizando la función corrplot.
+
+```{r}
+correlation_plot <- function(df) {
+  if (!all(c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g") %in% colnames(df))) {
+    stop("Input data frame must contain 'bill_length_mm', 'bill_depth_mm', 'flipper_length_mm', and 'body_mass_g' columns")
+  }
+  df_num <- df %>%
+    select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g) %>%
+    filter(is.na(bill_length_mm) == F)
+  df_num.cor <- cor(df_num, method = c("spearman"))
+  corrplot(df_num.cor)
+}
+```
+Primero, se verifica si el data frame contiene las columnas necesarias (```bill_length_mm```, ```bill_depth_mm```, ```flipper_length_mm``` y “body_mass_g”), y si no, se produce un error. A continuación, se seleccionan las columnas numéricas requeridas y se eliminan las filas con valores perdidos en la columna ```bill_length_mm```. Luego, se calcula la matriz de correlación utilizando el método de correlación de Spearman. Finalmente, se grafica la matriz de correlación utilizando la función ```corrplot```.
+
+```{r, warning=FALSE}
+correlation_plot(df)
+```
+
+### ```boxplot_jitter_var```
+
+Esta función genera un gráfico de dispersión para cada variable en el conjunto de datos de pingüinos, con la opción de generar gráficas para variables individuales o para todas las variables.
+```{r}
+boxplot_jitter_var <- function(df, var_index) {
+  var_list <- c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g")
+  if (!all(var_list %in% colnames(df))) {
+    stop("Input data frame must contain all columns in 'var_list'")
+  }
+  if (var_index == "all") {
+    plot_list <- list()
+    for (var in var_list) {
+      p <- ggplot(df, aes_string(x = "species", y = var)) +
+        geom_boxplot(aes(color = species), width = 0.3, show.legend = FALSE) +
+        geom_jitter(aes(color = species), alpha = 0.5, show.legend = FALSE,
+                    position = position_jitter(width = 0.2, seed = 0)) +
+        scale_color_manual(values = c("darkorange","purple","cyan4")) +
+        theme_grey() +
+        labs(x = "Species", y = var)
+      plot_list[[var]] <- p
+    }
+    gridExtra::grid.arrange(grobs = plot_list, ncol = 2)
+  } else {
+    var <- var_list[var_index]
+    p <- ggplot(df, aes_string(x = "species", y = var)) +
+      geom_boxplot(aes(color = species), width = 0.3, show.legend = FALSE) +
+      geom_jitter(aes(color = species), alpha = 0.5, show.legend = FALSE,
+                  position = position_jitter(width = 0.2, seed = 0)) +
+      scale_color_manual(values = c("darkorange","purple","cyan4")) +
+      theme_grey() +
+      labs(x = "Species", y = var)
+    print(p)
+  }
+}
+```
+
+Primero, se toma un conjunto de datos ```df``` (el mismo que para las anteriores funciones) que contiene información sobre pingüinos, y un índice var_index que especifica una de cuatro variables numéricas ```(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g). Si var_index es igual a```  ```all```, la función genera un conjunto de gráficos de caja y puntos para cada variable numérica en var_list. Si no, la función genera un solo gráfico de caja y puntos para la variable especificada por var_index.
+
+    1 = "bill_length_mm"
+     2 = "bill_depth_mm"
+    3 = "flipper_length_mm"
+     4 = "body_mass_g"
+     "all" = Una grafica conjunta con las anteriores variables
+
+En ambos casos, la función usa ggplot para crear los gráficos. Cada gráfico tiene una caja para cada especie de pingüino en el conjunto de datos, y puntos que indican la distribución de los datos para cada especie. Los puntos están ligeramente desplazados para que no se superpongan. Los colores de las cajas y los puntos se asignan manualmente para que sean consistentes entre los gráficos. 
+
+Por ejemplo, para graficar la variable ```flipper_length_mm```:
+```{r, warning=FALSE}
+boxplot_jitter_var(df,3)
+```
+
+Para generar una grafica conjunta:
+
+```{r, warning=FALSE}
+boxplot_jitter_var(df, "all")
+```
+
+
+### ```densityplot_var```
+
+Esta función genera una gráfica de densidad para cada variable en el conjunto de datos de pingüinos,con la opción de generar gráficas para variables individuales o para todas las variables.
+
+```{r}
+densityplot_var <- function(df, var_index) {
+  var_list <- c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g")
+  if (!all(var_list %in% colnames(df))) {
+    stop("Input data frame must contain all columns in 'var_list'")
+  }
+  if (var_index == "all") {
+    plot_list <- list()
+    for (var in var_list) {
+      p <- ggplot(df, aes_string(x = var)) +
+        geom_density(aes(fill = species),
+                     alpha = 0.5,
+                     position = "identity") +
+        scale_fill_manual(values = c("darkorange","purple","cyan4")) +
+        theme_minimal() +
+        labs(x = var,
+             y = "Frequency",
+             title = paste("Penguin", var))
+      plot_list[[var]] <- p
+    }
+    gridExtra::grid.arrange(grobs = plot_list, ncol = 2)
+  } else {
+    var <- var_list[var_index]
+    p <- ggplot(df, aes_string(x = var)) +
+      geom_density(aes(fill = species),
+                   alpha = 0.5,
+                   position = "identity") +
+      scale_fill_manual(values = c("darkorange","purple","cyan4")) +
+      theme_minimal() +
+      labs(x = var,
+           y = "Frequency",
+           title = paste("Penguin", var))
+    print(p)
+  }
+}
+
+```
+
+De igual manera que para la función ```boxplot_jitter_var```
+
+La variable a graficar se especifica mediante el índice de la variable en la lista var_list, que contiene los nombres de las columnas válidas en el data frame. Si el índice es ```all```, la función crea gráficos de densidad para todas las variables de la lista. El gráfico muestra la distribución de valores para cada especie de pingüino en diferentes tonos de color. La función utiliza el paquete ggplot2 para crear los gráficos y gridExtra para mostrar varios gráficos en una sola figura.
+
+Por ejemplo, para graficar la variable ```flipper_length_mm```:
+```{r, warning=FALSE}
+densityplot_var(df,3)
+```
+
+Para generar una grafica conjunta:
+
+```{r, warning=FALSE}
+densityplot_var(df, "all")
+```
