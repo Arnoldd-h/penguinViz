@@ -18,8 +18,8 @@ library(penguinViz)
 ## [Functions:](https://github.com/Arnoldd-h/penguinViz/tree/main/R)
 Once the package is loaded, you can use its functions to generate different types of plots. The package includes the following functions:
 
-* ```barplot_var:``` This function generates a bar plot of the frequency of a specified variable in the input data frame.
-* ```piechart_var:``` This function generates a pie chart of the relative frequency of a specified variable in the input data frame.
+* [```barplot_var:```](https://github.com/Arnoldd-h/penguinViz/blob/main/R/barplot_var.R) This function generates a bar plot of the frequency of a specified variable in the input data frame.
+* [```piechart_var:```](https://github.com/Arnoldd-h/penguinViz/blob/main/R/piechart_var.R) This function generates a pie chart of the relative frequency of a specified variable in the input data frame.
 * ```correlation_table:``` This function generates a correlation table of the numeric variables in the input data frame.
 * ```correlation_plot:``` This function generates a correlation plot of the numeric variables in the input data frame.
 * ```boxplot_jitter_var:``` This function generates a box plot with jittered points of a specified variable in the input data frame.
