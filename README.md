@@ -36,11 +36,11 @@ For example, to generate a bar plot of the frequency of penguin species, you can
 
 
  ```r
- boxplot_jitter_var(df, "species")
+ > boxplot_jitter_var(df, "species")
  >
- ![boxplot_jitter_var( )](https://user-images.githubusercontent.com/127006114/229267900-5ccdddb5-bda0-4c86-9f3f-b151f511dc21.png)
-
  ```
+ ![boxplot_jitter_var( )](https://user-images.githubusercontent.com/127006114/229267900-5ccdddb5-bda0-4c86-9f3f-b151f511dc21.png)
+ 
  
 This will generate a bar plot using the data in your df data frame and the specified variable (species). You can use the other functions in the package in a similar way to generate different types of plots.
 
