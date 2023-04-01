@@ -1,4 +1,10 @@
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/Arnoldd-h/penguinViz)
+[![Build Status](https://travis-ci.com/Arnoldd-h/penguinViz.svg?branch=master)](https://travis-ci.com/Arnoldd-h/penguinViz)
+[![Coverage Status](https://coveralls.io/repos/github/Arnoldd-h/penguinViz/badge.svg?branch=master)](https://coveralls.io/github/Arnoldd-h/penguinViz?branch=master)
+
+
 # penguinViz
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/Arnoldd-h/penguinViz)
 
 The `penguinViz` package provides a set of easy-to-use functions for visualizing data about penguins. With `penguinViz`, you can quickly generate bar plots, pie charts, box plots, scatter plots, density plots, and correlation plots to explore and understand your penguin data.
 
@@ -34,7 +40,13 @@ For example, to generate a bar plot of the frequency of penguin species, you can
  ```
 This will generate a bar plot using the data in your df data frame and the specified variable (species). You can use the other functions in the package in a similar way to generate different types of plots.
 
+# Documentation
+For more information on how to use penguin Viz, see our full documentation at https://arnoldd-h.github.io/penguinViz/.
+
 For more information on the operation of each of the functions, you can review the document [description_package.rmd](https://github.com/Arnoldd-h/penguinViz/blob/main/description_package.Rmd)
+
+
+
 # License
 The  ```penguinViz ``` package is licensed under the MIT license.
 
